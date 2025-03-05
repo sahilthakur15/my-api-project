@@ -1,9 +1,9 @@
 const express = require("express");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv");
 const dbConnect = require("./v1/config/dbConnect"); // imported dbConnect function from dbConnect.js file.
 const authRoutes = require("./v1/routes/authRoutes"); // imported authRoutes from routes folder.
 
-
+dotenv.config();
 dbConnect(); // calling dbConnect function to connect to database.
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes); // using authRoutes from routes folder.
 
 //Start the Server
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8002;
 app.listen(PORT, ()=>{
     console.log(`Server is running at port ${PORT}`)
 });

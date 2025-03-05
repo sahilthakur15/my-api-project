@@ -1,5 +1,5 @@
 const express = require("express");
-const {register,login} = require("../controllers/authController")
+const {register,login} = require("../controllers/authController") // importing register and login functions from authController.js file.
 const router = express.Router(); // creating router
 
 router.post("/register", register); // calling register function
