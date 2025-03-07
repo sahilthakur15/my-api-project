@@ -3,10 +3,14 @@ const dotenv = require("dotenv");
 const dbConnect = require("./v1/config/dbConnect"); // imported dbConnect function from dbConnect.js file.
 const authRoutes = require("./v1/routes/authRoutes"); // imported authRoutes from routes folder.
 const cors = require("cors"); // imported cors from cors package.
+const User = require("./v1/models/userModel"); // imported User model from models folder.
+const bcrypt = require("bcryptjs"); // imported bcrypt from bcrypt package.
 
 dotenv.config();
-dbConnect(); // calling dbConnect function to connect to database.
-
+dbConnect().then(() => {
+    console.log("🔥 Connected to MongoDB");
+    createSuperadmin(); // ✅ Call the function AFTER connecting to DB
+  });
 const app = express();
 
 //cors 
@@ -21,6 +25,32 @@ app.use(express.json());
 
 //Routes
 app.use("/api/auth", authRoutes); // using authRoutes from routes folder.
+
+//Super Admin
+async function createSuperadmin() {
+    try {
+      const superadminExists = await User.findOne({ role: "superadmin" });
+  
+      if (!superadminExists) {
+        const hashedPassword = await bcrypt.hash("SuperAdmin@123", 10); // ✅ Hash password
+  
+        const superadmin = new User({
+          username: "Sahil",
+          email: "sahilth@gmail.com",
+          password: hashedPassword, // ✅ Store hashed password
+          role: "superadmin",
+        });
+  
+        await superadmin.save();
+        console.log("✅ Superadmin created successfully!");
+      } else {
+        console.log("⚡ Superadmin already exists.");
+      }
+    } catch (error) {
+      console.error("❌ Error creating superadmin:", error);
+    }
+  }
+
 
 //Start the Server
 const PORT = process.env.PORT || 8002;
