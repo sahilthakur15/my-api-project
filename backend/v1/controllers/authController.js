@@ -42,6 +42,7 @@ const register = async (req, res) => {
   }
 };
 
+
 // User login
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -89,5 +90,48 @@ const login = async (req, res) => {
   }
 };
 
+
+// User Management 
+const allUsers = async(req, res) => {
+  try{
+    const user= await User.find();
+    return APIResponse.success(res,{
+      status: 200,
+      message: "All users",data: user
+    })
+
+  } catch(err){
+    return APIResponse.error(res,{
+      status:500,
+      message: "Error getting all users",
+    })
+
+  };
+}
+
+// Get user by ID
+const getUserById = async (req, res) => {
+  const {id} = req.params;
+
+  try{
+    const user = await User.findById(id);
+    return APIResponse.success(res, {
+      status: 200,
+      message: "User found", data: user
+    })
+
+  } catch(err){
+    return APIResponse.error(res, {
+      status: 500,
+      message: "Error getting user",
+    })
+
+  };
+
+}
+
+
+
+
 // Exporting the functions
-module.exports = { register, login };
+module.exports = { register, login, allUsers, getUserById };
