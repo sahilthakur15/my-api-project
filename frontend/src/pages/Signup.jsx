@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import "../style/Auth.css"
 
 function Signup() {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const dataSubmit = async (event) => {
     event.preventDefault(); // Prevents page reload
@@ -24,6 +27,8 @@ function Signup() {
       setName('');
       setEmail('');
       setPassword('');
+      navigate('/login'); // Redirect to login page after successful signup
+      
     } catch (err) {
       console.log(err);
     }

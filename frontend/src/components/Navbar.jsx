@@ -1,11 +1,18 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
+import "../style/Navbar.css"
 
-const Navbar = () => {
+export default function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); // Remove token
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
-    <div>
-      <h1>Navbar</h1>
-    </div>
-  )
+    <nav className="navbar">
+      <h2 className="navbar-title">Admin Dashboard</h2>
+      <button className="logout-btn" onClick={handleLogout}>Logout</button>
+    </nav>
+  );
 }
-
-export default Navbar

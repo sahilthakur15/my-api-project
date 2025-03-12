@@ -1,0 +1,124 @@
+/* Light Pastel Gradient Background */
+body {
+    background: linear-gradient(to right, #fdfbfb, #d3c9c9);
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+/* Main Container */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Page Title */
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff758c;
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+/* Users Grid - Three Cards Per Row */
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: center;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* User Card */
+.user-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #ff758c;
+    text-align: center;
+}
+
+/* Hover Effect */
+.user-card:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.3);
+    border-left: 6px solid #ff7eb3;
+}
+
+/* User Avatar */
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 3px solid #ff758c;
+}
+
+/* User Info */
+.card-title {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.card-text {
+    font-size: 16px;
+    color: #555;
+    margin: 4px 0;
+}
+
+/* Button Styles */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.action-buttons button {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: 0.3s ease-in-out;
+}
+
+.btn-warning {
+    background: #ffcc00;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background: #e6b800;
+}
+
+.btn-danger {
+    background: #ff4d4d;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #e60000;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .users-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+    }
+}
+
+@media (max-width: 768px) {
+    .users-grid {
+        grid-template-columns: repeat(1, 1fr); /* 1 Column */
+    }
+}
