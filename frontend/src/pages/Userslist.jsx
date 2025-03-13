@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/Userslist.css";
-import { FaUserShield, FaTrash } from "react-icons/fa"; // Import Icons
+import { FaUserShield, FaUser, FaTrash } from "react-icons/fa"; // Added FaUser icon
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
@@ -20,21 +20,22 @@ export default function UsersList() {
         },
       });
 
-      setUsers(response.data.data || []); // Set users data
+      setUsers(response.data.data || []);
     } catch (error) {
       console.error("Error fetching users", error);
     }
   };
 
-  // Handle Role Change to Admin
-  const handleRoleChange = async (userId) => {
+  // Toggle Role Between "admin" and "user"
+  const handleRoleToggle = async (userId, currentRole) => {
     const token = localStorage.getItem("authToken");
+    const newRole = currentRole === "admin" ? "user" : "admin"; // Toggle role
 
-    if (window.confirm("Are you sure you want to make this user an Admin?")) {
+    if (window.confirm(`Are you sure you want to change role to ${newRole}?`)) {
       try {
         await axios.put(
           `http://localhost:8001/api/admin/updateuser/${userId}`,
-          { role: "admin" }, // Update role to admin
+          { role: newRole }, // Update role dynamically
           {
             headers: {
               Authorization: token,
@@ -68,9 +69,8 @@ export default function UsersList() {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Users List</h1>
+      <h1 className="users-title text-center mb-4">Users List</h1>
 
-      {/* Fix Row Layout */}
       <div className="users-grid">
         {users.map((user) => {
           let avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${user.username}`;
@@ -79,7 +79,6 @@ export default function UsersList() {
             <div key={user._id} className="user-card">
               <div className="card shadow-sm">
                 <div className="card-body text-center">
-                  {/* Avatar Image */}
                   <img src={avatarUrl} alt={user.username} className="user-avatar" />
 
                   <h5 className="card-title mt-2">{user.username}</h5>
@@ -90,11 +89,13 @@ export default function UsersList() {
                     <strong>Role:</strong> {user.role}
                   </p>
                   <div className="action-buttons">
-                    {user.role !== "admin" && (
-                      <button className="btn btn-warning me-2" onClick={() => handleRoleChange(user._id)}>
-                        <FaUserShield /> Make Admin
-                      </button>
-                    )}
+                    <button
+                      className={`btn ${user.role === "admin" ? "btn-secondary" : "btn-warning"} me-2`}
+                      onClick={() => handleRoleToggle(user._id, user.role)}
+                    >
+                      {user.role === "admin" ? <FaUser /> : <FaUserShield />}{" "}
+                      {user.role === "admin" ? "Make User" : "Make Admin"}
+                    </button>
                     <button className="btn btn-danger" onClick={() => handleDelete(user._id)}>
                       <FaTrash /> Delete
                     </button>
