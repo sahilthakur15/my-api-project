@@ -44,17 +44,6 @@ const getUserByID = async (req, res) => {
 
 }
 
-// create new user
-const createUser = async(req, res) => {
-    try{
-    const {username, email, password, role} = req.body;
-    const newUser = new User({ username, email, password, role});
-    await newUser.save();
-    return APIResponse.success(res,{status:200, message: "User created successfully", data: newUser})
-    } catch(err){
-        return APIResponse.error(res,{status: 500, message: Messages.error, data: err})
-    };
-}
 
 // update user
 const updateUser = async (req, res) => {
@@ -119,10 +108,50 @@ const deleteUser = async (req, res) => {
 };
 
 
+const Movie = require("../models/movieModel");
+
+// Add a new movie
+const addMovie = async (req, res) => {
+  try {
+    const { title, description, category, releaseDate, posterUrl } = req.body;
+
+    // Validate required fields
+    if (!title || !category || !releaseDate || !posterUrl) {
+      return res.status(400).json({ message: "All required fields must be filled." });
+    }
+
+    // Check if category is valid
+    if (!["Now Playing", "Upcoming"].includes(category)) {
+      return res.status(400).json({ message: "Invalid category." });
+    }
+
+    const newMovie = new Movie({ title, description, category, releaseDate, posterUrl });
+    await newMovie.save();
+
+    res.status(201).json({ message: "Movie added successfully!", movie: newMovie });
+  } catch (error) {
+    res.status(500).json({ message: "Error adding movie", error: error.message });
+  }
+};
+
+// Get all movies
+const getAllMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.status(200).json(movies);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching movies", error: error.message });
+  }
+};
+
+
+
+
 module.exports = {
     allUsers,
     getUserByID,
-    createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    addMovie, 
+    getAllMovies
 }
