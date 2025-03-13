@@ -5,6 +5,7 @@ const authRoutes = require("./v1/routes/authRoutes"); // imported authRoutes fro
 const cors = require("cors"); // imported cors from cors package.
 const User = require("./v1/models/userModel"); // imported User model from models folder.
 const bcrypt = require("bcryptjs"); // imported bcrypt from bcrypt package.
+const adminRoutes = require("./v1/routes/adminRoutes");
 
 dotenv.config();
 dbConnect().then(() => {
@@ -25,6 +26,7 @@ app.use(express.json());
 
 //Routes
 app.use("/api/auth", authRoutes); // using authRoutes from routes folder.
+app.use("/api/admin", adminRoutes); // using authRoutes from routes folder.
 
 //Super Admin
 async function createSuperadmin() {
