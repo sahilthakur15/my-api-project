@@ -1,5 +1,4 @@
-/* Admin Dashboard */
-
+/* 🌟 Admin Dashboard */
 .dashboard-container {
     display: flex;
     flex-direction: column;
@@ -7,9 +6,11 @@
     justify-content: center;
     height: 100vh;
     padding: 20px;
+    background:linear-gradient(to right, #fdfbfb, #d3c9c9) !important; /* Light background */
+    color: #333;
 }
 
-/* Card Container */
+/* 📊 Card Container */
 .dashboard-cards {
     display: flex;
     gap: 30px;
@@ -17,51 +18,202 @@
     justify-content: center;
 }
 
-/* Individual Stat Card */
+/* 🎨 Individual Stat Card */
 .stat-card {
     display: flex;
     align-items: center;
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    width: 300px; /* Increased width */
-    height: 160px; /* Increased height */
-    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 25px;
+    width: 320px; /* Increased width */
+    height: 170px; /* Increased height */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     cursor: pointer;
+    position: relative;
 }
 
-/* Hover Effect */
+/* ✨ Hover Effect */
 .stat-card:hover {
-    transform: scale(1.05);
-    box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Icon Container */
+/* 🎨 Soft Icon Background */
 .icon-container {
-    background: rgba(255, 117, 140, 0.2);
-    padding: 20px;
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Soft Blue Gradient */
+    padding: 22px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 20px;
+    box-shadow: 0px 4px 10px rgba(161, 196, 253, 0.4);
 }
 
-/* Stat Details */
+/* 🌟 Stat Details */
 .stat-details h3 {
     font-size: 22px;
-    color: #333;
+    color: #444;
     margin-bottom: 5px;
 }
 
 .stat-details p {
     font-size: 30px;
     font-weight: bold;
-    color: #555;
+    color: #666;
 }
 
-/* Responsive */
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .dashboard-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+/* 🌟 Admin Dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    background: #f9f9f9; /* Light background */
+    color: #333;
+}
+
+/* 📊 Card Container */
+.dashboard-cards {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* 🎨 Individual Stat Card */
+.stat-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    width: 320px; /* Increased width */
+    height: 170px; /* Increased height */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+    position: relative;
+}
+
+/* ✨ Hover Effect */
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 🎨 Soft Icon Background */
+.icon-container {
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Soft Blue Gradient */
+    padding: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    box-shadow: 0px 4px 10px rgba(161, 196, 253, 0.4);
+}
+
+/* 🌟 Stat Details */
+.stat-details h3 {
+    font-size: 22px;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.stat-details p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #666;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .dashboard-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+/* 🌟 Admin Dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    background: #f9f9f9; /* Light background */
+    color: #333;
+}
+
+/* 📊 Card Container */
+.dashboard-cards {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* 🎨 Individual Stat Card */
+.stat-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    width: 320px; /* Increased width */
+    height: 170px; /* Increased height */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+    position: relative;
+}
+
+/* ✨ Hover Effect */
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 🎨 Soft Icon Background */
+.icon-container {
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb); /* Soft Blue Gradient */
+    padding: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    box-shadow: 0px 4px 10px rgba(161, 196, 253, 0.4);
+}
+
+/* 🌟 Stat Details */
+.stat-details h3 {
+    font-size: 22px;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.stat-details p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #666;
+}
+
+/* 📱 Responsive */
 @media (max-width: 768px) {
     .dashboard-cards {
         flex-direction: column;

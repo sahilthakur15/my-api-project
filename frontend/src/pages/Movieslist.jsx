@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "../style/Movies.css";
+import MoviesNavbar from "../components/Moviesbar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faFilm, faTrash, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [newMovie, setNewMovie] = useState({
-    title: "",
-    description: "",
-    category: "Now Playing",
-    releaseDate: "",
-    posterUrl: "",
-  });
+  const [menuOpen, setMenuOpen] = useState(null);
+  const menuRefs = useRef({});
 
   useEffect(() => {
     fetchMovies();
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const fetchMovies = async () => {
+    setLoading(true);
     const token = localStorage.getItem("authToken");
-
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allmovies", {
         headers: { Authorization: token },
       });
-
       setMovies(response.data || []);
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -35,90 +35,109 @@ const Movies = () => {
     }
   };
 
-  const handleChange = (e) => {
-    setNewMovie({ ...newMovie, [e.target.name]: e.target.value });
-  };
-
-  const handleAddMovie = async (e) => {
-    e.preventDefault();
+  const handleDeleteMovie = async (movieId) => {
+    console.log(`Delete button clicked for movie ID: ${movieId}`); // ✅ Debug log
     const token = localStorage.getItem("authToken");
+    if (!window.confirm("Are you sure you want to delete this movie?")) return;
 
     try {
-      await axios.post("http://localhost:8001/api/admin/addmovies", newMovie, {
+      const response = await axios.delete(`http://localhost:8001/api/admin/deletemovies/${movieId}`, {
         headers: { Authorization: token },
       });
+      console.log("Delete response:", response); // ✅ Debug log
 
-      alert("Movie added successfully!");
-      fetchMovies();
-      setNewMovie({ title: "", description: "", category: "Now Playing", releaseDate: "", posterUrl: "" });
-      setShowForm(false);
+      // ✅ Update state directly instead of re-fetching
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie._id !== movieId));
+      alert("Movie deleted successfully!");
     } catch (error) {
-      console.error("Error adding movie:", error);
-      alert("Failed to add movie.");
+      console.error("Error deleting movie:", error);
+      alert("Failed to delete movie. Please try again.");
     }
   };
 
-  if (loading) {
-    return <p className="movies-loading-text">Loading movies...</p>;
-  }
+  const toggleMenu = (movieId) => {
+    console.log(`Toggling menu for: ${movieId}`); // ✅ Debug log
+    setMenuOpen((prev) => (prev === movieId ? null : movieId));
+  };
 
-  const nowPlayingMovies = movies.filter((movie) => movie.category === "Now Playing");
-  const upcomingMovies = movies.filter((movie) => movie.category === "Upcoming");
+  const handleClickOutside = (event) => {
+    if (menuOpen && menuRefs.current[menuOpen] && !menuRefs.current[menuOpen].contains(event.target)) {
+      setMenuOpen(null);
+    }
+  };
+
+  if (loading) return <p className="movies-loading-text">Loading movies...</p>;
 
   return (
-    <div className="movies-section">
-      <h2>Movies List</h2>
+    <>
+      <MoviesNavbar fetchMovies={fetchMovies} />
 
-      {/* Add Movie Button */}
-      <button className="movies-add-btn" onClick={() => setShowForm(true)}>+ Add Movie</button>
+      <div className="movies-container">
+        {/* Now Playing Section */}
+        <h2 className="movies-now-playing-title">Now Playing</h2>
+        <div className="movies-grid">
+          {movies
+            .filter((movie) => movie.category === "Now Playing")
+            .map((movie) => (
+              <div key={movie._id} className="movies-card">
+                <div className="menu-container" ref={(el) => (menuRefs.current[movie._id] = el)}>
+                  <button className="menu-btn" onClick={() => toggleMenu(movie._id)}>
+                    <FontAwesomeIcon icon={faEllipsisV} />
+                  </button>
+                  {menuOpen === movie._id && (
+                    <div className="menu-dropdown">
+                      <button className="delete-btn" onClick={() => handleDeleteMovie(movie._id)}>
+                        <FontAwesomeIcon icon={faTrash} /> Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
 
-      {/* Movie Form */}
-      {showForm && (
-        <div className="movies-form-container">
-          <div className="movies-form-popup">
-            <h3>Add New Movie</h3>
-            <form onSubmit={handleAddMovie}>
-              <input type="text" name="title" placeholder="Title" value={newMovie.title} onChange={handleChange} required />
-              <textarea name="description" placeholder="Description" value={newMovie.description} onChange={handleChange} required />
-              <select name="category" value={newMovie.category} onChange={handleChange} required>
-                <option value="Now Playing">Now Playing</option>
-                <option value="Upcoming">Upcoming</option>
-              </select>
-              <input type="date" name="releaseDate" value={newMovie.releaseDate} onChange={handleChange} required />
-              <input type="text" name="posterUrl" placeholder="Poster URL" value={newMovie.posterUrl} onChange={handleChange} required />
-              <div className="movies-form-buttons">
-                <button type="submit">Add Movie</button>
-                <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
+                <h3>{movie.title}</h3>
+                <p>
+                  <FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}
+                </p>
               </div>
-            </form>
-          </div>
+            ))}
         </div>
-      )}
 
-      {/* Now Playing Movies */}
-      <h2>Now Playing</h2>
-      <div className="movies-grid">
-        {nowPlayingMovies.map((movie) => (
-          <div key={movie._id} className="movies-card">
-            <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
-            <h3>{movie.title}</h3>
-            <p>{movie.description}</p>
-          </div>
-        ))}
-      </div>
+        {/* Upcoming Section */}
+        <h2 className="movies-upcoming-title">Upcoming</h2>
+        <div className="movies-grid">
+          {movies
+            .filter((movie) => movie.category === "Upcoming")
+            .map((movie) => (
+              <div key={movie._id} className="movies-card">
+                <div className="menu-container" ref={(el) => (menuRefs.current[movie._id] = el)}>
+                  <button className="menu-btn" onClick={() => toggleMenu(movie._id)}>
+                    <FontAwesomeIcon icon={faEllipsisV} />
+                  </button>
+                  {menuOpen === movie._id && (
+                    <div className="menu-dropdown">
+                      <button className="delete-btn" onClick={() => handleDeleteMovie(movie._id)}>
+                        <FontAwesomeIcon icon={faTrash} /> Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
 
-      {/* Upcoming Movies */}
-      <h2>Upcoming</h2>
-      <div className="movies-grid">
-        {upcomingMovies.map((movie) => (
-          <div key={movie._id} className="movies-card">
-            <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
-            <h3>{movie.title}</h3>
-            <p>{movie.description}</p>
-          </div>
-        ))}
+                <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
+                <h3>{movie.title}</h3>
+                <p>
+                  <FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}
+                </p>
+              </div>
+            ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,156 +1,144 @@
-/* Movies Container */
-.movies-section {
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px;
+/* 🎨 Light Pastel-Themed Movies Section */
+.movies-container {
+    background: linear-gradient(to right, #fdfbfb, #d3c9c9); /* Soft pastel gradient */
+    padding-top: 50px;
+}
+
+/* 🎬 Section Titles */
+h2.movies-now-playing-title,
+h2.movies-upcoming-title {
+    color: #ff758c; /* Soft Pink */
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 50px;
+    text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.4);
     text-align: center;
 }
 
-/* Loading & No Movies Text */
-.movies-loading-text,
-.movies-no-movies {
-    font-size: 16px;
-    color: #888;
-}
-
-/* Movies Grid */
+/* 🌀 Smooth Scrolling Movie Grid */
 .movies-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller cards */
-    gap: 15px;
-    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 20px 0;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
-/* Movie Card */
+.movies-grid::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome & Safari */
+}
+
+/* 🎞 Movie Card (Fixed Size) */
 .movies-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
+    background: rgba(255, 255, 255, 0.85); /* Soft white glass */
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 250px; /* Fixed width */
+    height: 400px; /* Fixed height */
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
+/* ✨ Hover Effects (Lift Effect) */
 .movies-card:hover {
-    transform: scale(1.04);
+    transform: translateY(-8px);
+    box-shadow: 0px 10px 20px rgba(255, 117, 140, 0.3);
 }
 
-/* Movie Poster */
+/* 🎥 Movie Poster (Fixed Size) */
 .movies-poster {
-    width: 100%;
-    height: 220px; /* Smaller height */
+    width: 100%; /* Match card width */
+    height: 280px; /* Fixed height */
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 10px;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    border: 3px solid #ff758c; /* Soft pink border */
 }
 
-/* Headings */
-.movies-section h2 {
-    color: #333;
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.movies-section h3 {
-    color: #444;
+/* 🎭 Movie Details */
+.movies-card h3 {
+    color: #ff758c; /* Soft Pink */
     font-size: 18px;
+    font-weight: bold;
     margin-top: 8px;
+    text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.4);
 }
 
-.movies-section p {
-    font-size: 13px;
-    color: #666;
+.movies-card p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+    line-height: 1.4;
+    padding: 0 10px;
 }
+.icon-star {
+    color: gold;
+    margin-right: 5px;
+  }
+  
+  .icon-genre {
+    color: #ff758c;
+    margin-right: 5px;
+  }
 
-/* Add Movie Button */
-.movies-add-btn {
-    background: #ff758c;
-    color: white;
-    padding: 6px 12px;
+  .movies-card {
+    position: relative; /* ✅ Makes sure the menu is positioned inside the card */
+  }
+  
+  .menu-container {
+    position: absolute;
+    top: 8px;
+    right: 0px; /* ✅ Moves menu to the right */
+  }
+  
+  .menu-btn {
+    background: none;
     border: none;
-    border-radius: 5px;
+    font-size: 18px;
     cursor: pointer;
-    font-size: 13px;
-    margin-bottom: 12px;
-    transition: 0.3s;
-}
-
-.movies-add-btn:hover {
-    background: #ff5a78;
-}
-
-/* Movie Form Popup */
-.movies-form-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    color: #ff758c;
+  }
+  
+  .menu-dropdown {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 8px;
+    border-radius: 5px;
+  }
+  
+  .delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: red;
+    font-size: 1.2rem; /* Adjust size if needed */
     display: flex;
     justify-content: center;
     align-items: center;
-}
+  }
+  
+  .delete-btn:hover {
+    color: darkred;
+  }
+  
 
-.movies-form-popup {
-    background: white;
-    padding: 18px;
-    border-radius: 8px;
-    width: 350px; /* Smaller form */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.movies-form-popup h3 {
-    margin-bottom: 12px;
-    color: #333;
-    text-align: center;
-}
-
-/* Form Inputs */
-.movies-form-popup input,
-.movies-form-popup textarea {
-    width: 100%;
-    padding: 8px;
-    margin: 6px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.movies-form-popup textarea {
-    resize: none;
-    height: 50px;
-}
-
-/* Form Buttons */
-.movies-form-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-}
-
-.movies-form-buttons button {
-    padding: 6px 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-}
-
-/* Add Movie Button */
-.movies-form-buttons button:first-child {
-    background: #28a745;
-    color: white;
-}
-
-.movies-form-buttons button:first-child:hover {
-    background: #218838;
-}
-
-/* Cancel Button */
-.movies-form-buttons button:last-child {
-    background: #dc3545;
-    color: white;
-}
-
-.movies-form-buttons button:last-child:hover {
-    background: #c82333;
+/* 🛠 Responsive Design */
+@media (max-width: 768px) {
+    .movies-grid {
+        flex-direction: column;
+        align-items: center;
+    }
 }
