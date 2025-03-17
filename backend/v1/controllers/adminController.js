@@ -2,6 +2,7 @@ require("dotenv").config();
 const APIResponse = require("../utilites/apiResponse");
 const Messages = require("../utilites/message");
 const User = require("../models/userModel");
+const Movie = require("../models/movieModel");
 
  
 
@@ -108,31 +109,37 @@ const deleteUser = async (req, res) => {
 };
 
 
-const Movie = require("../models/movieModel");
+
 
 // Add a new movie
 const addMovie = async (req, res) => {
-  try {
-    const { title, description, category, releaseDate, posterUrl } = req.body;
-
-    // Validate required fields
-    if (!title || !category || !releaseDate || !posterUrl) {
-      return res.status(400).json({ message: "All required fields must be filled." });
+    try {
+      const { title, description, category, releaseDate, posterUrl, genre, rating } = req.body;
+  
+      // Validate required fields
+      if (!title || !genre || !category || !releaseDate || !posterUrl) {
+        return res.status(400).json({ message: "All required fields must be filled." });
+      }
+  
+      // Check if category is valid
+      if (!["Now Playing", "Upcoming"].includes(category)) {
+        return res.status(400).json({ message: "Invalid category." });
+      }
+  
+      // Validate rating (must be between 0 and 10)
+      if (rating < 0 || rating > 10) {
+        return res.status(400).json({ message: "Rating must be between 0 and 10." });
+      }
+  
+      const newMovie = new Movie({ title, genre, rating, description, category, releaseDate, posterUrl });
+      await newMovie.save();
+  
+      res.status(201).json({ message: "Movie added successfully!", movie: newMovie });
+    } catch (error) {
+      res.status(500).json({ message: "Error adding movie", error: error.message });
     }
-
-    // Check if category is valid
-    if (!["Now Playing", "Upcoming"].includes(category)) {
-      return res.status(400).json({ message: "Invalid category." });
-    }
-
-    const newMovie = new Movie({ title, description, category, releaseDate, posterUrl });
-    await newMovie.save();
-
-    res.status(201).json({ message: "Movie added successfully!", movie: newMovie });
-  } catch (error) {
-    res.status(500).json({ message: "Error adding movie", error: error.message });
-  }
-};
+  };
+  
 
 // Get all movies
 const getAllMovies = async (req, res) => {
@@ -144,6 +151,24 @@ const getAllMovies = async (req, res) => {
   }
 };
 
+// Delete Movies
+const deleteMovies = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log("Deleting movie with ID:", id);  // ✅ Debugging log
+        
+        const deletedMovie = await Movie.findByIdAndDelete(id);  // ✅ Fix variable name
+        if (!deletedMovie) {
+            return res.status(404).json({ message: "Movie not found in database" });
+        }
+
+        res.status(200).json({ message: "Movie deleted successfully", deletedMovie });
+
+    } catch (err) {
+        res.status(500).json({ message: "Error deleting movie", error: err.message });
+    }
+};
+
 
 
 
@@ -153,5 +178,6 @@ module.exports = {
     updateUser,
     deleteUser,
     addMovie, 
-    getAllMovies
+    getAllMovies,
+    deleteMovies
 }
