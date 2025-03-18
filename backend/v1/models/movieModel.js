@@ -37,6 +37,11 @@ genre: {
     required: true
 },
 
+price: {
+  type: Number,
+  required: true 
+},
+
 });
 
 const Movie = mongoose.model("Movie", movieSchema);

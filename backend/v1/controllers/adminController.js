@@ -114,31 +114,36 @@ const deleteUser = async (req, res) => {
 // Add a new movie
 const addMovie = async (req, res) => {
     try {
-      const { title, description, category, releaseDate, posterUrl, genre, rating } = req.body;
-  
-      // Validate required fields
-      if (!title || !genre || !category || !releaseDate || !posterUrl) {
-        return res.status(400).json({ message: "All required fields must be filled." });
-      }
-  
-      // Check if category is valid
-      if (!["Now Playing", "Upcoming"].includes(category)) {
-        return res.status(400).json({ message: "Invalid category." });
-      }
-  
-      // Validate rating (must be between 0 and 10)
-      if (rating < 0 || rating > 10) {
-        return res.status(400).json({ message: "Rating must be between 0 and 10." });
-      }
-  
-      const newMovie = new Movie({ title, genre, rating, description, category, releaseDate, posterUrl });
-      await newMovie.save();
-  
-      res.status(201).json({ message: "Movie added successfully!", movie: newMovie });
+        const { title, description, category, releaseDate, posterUrl, genre, rating, price } = req.body;
+
+        // Validate required fields
+        if (!title || !genre || !category || !releaseDate || !posterUrl || !price) {
+            return res.status(400).json({ message: "All required fields must be filled." });
+        }
+
+        // Check if category is valid
+        if (!["Now Playing", "Upcoming"].includes(category)) {
+            return res.status(400).json({ message: "Invalid category." });
+        }
+
+        // Validate rating (must be between 0 and 10)
+        if (rating < 0 || rating > 10) {
+            return res.status(400).json({ message: "Rating must be between 0 and 10." });
+        }
+
+        // Create a new movie document
+        const newMovie = new Movie({ title, genre, rating, description, category, releaseDate, posterUrl, price });
+
+        // Save the movie to the database
+        await newMovie.save();
+
+        // Respond with success
+        res.status(201).json({ message: "Movie added successfully!", movie: newMovie });
     } catch (error) {
-      res.status(500).json({ message: "Error adding movie", error: error.message });
+        res.status(500).json({ message: "Error adding movie", error: error.message });
     }
-  };
+};
+
   
 
 // Get all movies
