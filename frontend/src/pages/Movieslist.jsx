@@ -21,10 +21,10 @@ const Movies = () => {
 
   const fetchMovies = async () => {
     setLoading(true);
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allmovies", {
-        headers: { Authorization: token },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setMovies(response.data || []);
     } catch (error) {
@@ -37,12 +37,12 @@ const Movies = () => {
 
   const handleDeleteMovie = async (movieId) => {
     console.log(`Delete button clicked for movie ID: ${movieId}`); // ✅ Debug log
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
     if (!window.confirm("Are you sure you want to delete this movie?")) return;
 
     try {
       const response = await axios.delete(`http://localhost:8001/api/admin/deletemovies/${movieId}`, {
-        headers: { Authorization: token },
+        headers: { Authorization: `Bearer ${token}` },
       });
       console.log("Delete response:", response); // ✅ Debug log
 

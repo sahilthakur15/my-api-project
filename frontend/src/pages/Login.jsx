@@ -10,30 +10,32 @@ const Login = () => {
     const dataSubmit = async (event) => {
         event.preventDefault();
 
-        const loginData = { email, password };
-
         try {
-            const response = await axios.post('http://localhost:8001/api/auth/login', loginData);
+            const response = await axios.post('http://localhost:8001/api/auth/login', { email, password });
 
-            console.log("Login Response:", response.data.data.user.role); // Debugging log
+            console.log("Login Response:", response.data);
 
-            // Extract token and role from response
+            // Extract token and role safely
             const token = response.data?.data?.token;
-            const role = response.data?.data?.user.role;
+            const role = response.data?.data?.user?.role;
 
-            if (token && role) {
-                // Save token and role in localStorage
-                localStorage.setItem("authToken", `Bearer ${token}`);
-                localStorage.setItem("userRole", role);
+            if (token) {
+                localStorage.setItem("token", token); // ✅ Fixed key to match authMiddleware
+                console.log("Token stored:", token);
 
-                alert("Login Successful");
+                if (role) {
+                    localStorage.setItem("userRole", role);
+                    console.log("User role stored:", role);
+                }
+
+                alert("Login Successful!");
+
+                // Clear form fields
+                setEmail('');
+                setPassword('');
 
                 // Redirect based on role
-                if (role === "superadmin") {
-                    navigate('/AdminDashboard');
-                } else {
-                    navigate('/UserDashboard');
-                }
+                navigate(role === "superadmin" ? '/AdminDashboard' : '/UserDashboard');
             } else {
                 alert("Invalid login response. Please try again.");
             }
@@ -44,7 +46,7 @@ const Login = () => {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-200 bg-light">
+        <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
             <div className="card p-4 shadow-sm" style={{ width: "350px" }}>
                 <h2 className="text-center mb-3">Login</h2>
                 <form onSubmit={dataSubmit}>
@@ -54,6 +56,7 @@ const Login = () => {
                             type="email" 
                             className="form-control" 
                             placeholder="Enter email" 
+                            value={email} 
                             onChange={(e) => setEmail(e.target.value)} 
                             required 
                         />
@@ -64,6 +67,7 @@ const Login = () => {
                             type="password" 
                             className="form-control" 
                             placeholder="Enter password" 
+                            value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
                             required 
                         />

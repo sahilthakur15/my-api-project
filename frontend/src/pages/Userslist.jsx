@@ -11,13 +11,11 @@ export default function UsersList() {
   }, []);
 
   const fetchUsers = async () => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
 
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allusers", {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setUsers(response.data.data || []);
@@ -28,7 +26,7 @@ export default function UsersList() {
 
   // Toggle Role Between "admin" and "user"
   const handleRoleToggle = async (userId, currentRole) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
     const newRole = currentRole === "admin" ? "user" : "admin"; // Toggle role
 
     if (window.confirm(`Are you sure you want to change role to ${newRole}?`)) {
@@ -37,9 +35,7 @@ export default function UsersList() {
           `http://localhost:8001/api/admin/updateuser/${userId}`,
           { role: newRole }, // Update role dynamically
           {
-            headers: {
-              Authorization: token,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
         fetchUsers(); // Refresh user list
@@ -51,14 +47,12 @@ export default function UsersList() {
 
   // Handle Delete User
   const handleDelete = async (userId) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
 
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await axios.delete(`http://localhost:8001/api/admin/deleteuser/${userId}`, {
-          headers: {
-            Authorization: token,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         fetchUsers(); // Refresh user list
       } catch (error) {

@@ -15,46 +15,57 @@ export default function AdminDashboard() {
     fetchMovieCount();
   }, []);
 
+  // Function to fetch total users count
   const fetchUserCount = async () => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("🚨 No token found in localStorage! User may not be authenticated.");
+      return;
+    }
 
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allusers", {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      setUserCount(response.data.data.length || 0);
+      if (Array.isArray(response.data.data)) {
+        setUserCount(response.data.data.length);
+      } else {
+        console.error("⚠️ Unexpected user count response:", response.data);
+        setUserCount(0);
+      }
     } catch (error) {
-      console.error("Error fetching user count", error);
+      console.error("❌ Error fetching user count:", error.response?.data || error.message);
+      setUserCount(0);
     }
   };
 
+  // Function to fetch total movies count
   const fetchMovieCount = async () => {
-    const token = localStorage.getItem("authToken"); // Get token
-  
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("🚨 No token found in localStorage! User may not be authenticated.");
+      return;
+    }
+
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allmovies", {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-  
-      // Directly check if response data is an array
+
       if (Array.isArray(response.data)) {
-        setMovieCount(response.data.length); // Use length of the array
+        setMovieCount(response.data.length);
       } else {
-        console.error("Invalid movie count response:", response.data);
+        console.error("⚠️ Unexpected movie count response:", response.data);
         setMovieCount(0);
       }
     } catch (error) {
-      console.error("Error fetching movie count", error);
+      console.error("❌ Error fetching movie count:", error.response?.data || error.message);
       setMovieCount(0);
     }
   };
-  
-  
 
   return (
     <>
@@ -73,7 +84,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Total Movies Card (Clickable) */}
+          {/* Total Movies Card */}
           <div className="stat-card" onClick={() => navigate("/movies-list")}>
             <div className="icon-container">
               <FaFilm size={40} color="#4CAF50" />

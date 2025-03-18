@@ -12,7 +12,10 @@ export default function MoviesNavbar({ fetchMovies }) {
     posterUrl: "",
     genre: "",
     rating: "",
+    price: "",
   });
+
+  const [loading, setLoading] = useState(false); // For loading state
 
   const handleChange = (e) => {
     setNewMovie({ ...newMovie, [e.target.name]: e.target.value });
@@ -21,24 +24,39 @@ export default function MoviesNavbar({ fetchMovies }) {
   const handleAddMovie = async (event) => {
     event.preventDefault();
 
-    const token = localStorage.getItem("authToken");
+    // Client-side validation for price and rating
+    if (newMovie.price && (isNaN(newMovie.price) || newMovie.price < 200 || newMovie.price > 1000)) {
+      alert("❌ Price must be a valid number between 200 and 1000.");
+      return;
+    }
+
+    if (newMovie.rating && (isNaN(newMovie.rating) || newMovie.rating < 0 || newMovie.rating > 10)) {
+      alert("❌ Rating must be a valid number between 0 and 10.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
 
     try {
+      setLoading(true); // Set loading to true while adding the movie
+
       const response = await axios.post(
         "http://localhost:8001/api/admin/addmovies",
         newMovie,
-        { headers: { Authorization: token } }
+        { 
+          headers: { Authorization: `Bearer ${token}` },
+         }
       );
 
       console.log("Movie added:", response.data);
 
-      fetchMovies(); // ✅ Refresh movies list
+      fetchMovies(); // Refresh movies list
 
-      setShowForm(false); // ✅ Close form
+      setShowForm(false); // Close form
 
-      alert("✅ Movie successfully added! 🎉"); // ✅ Show success alert
+      alert("✅ Movie successfully added! 🎉");
 
-      // ✅ Reset form fields
+      // Reset form fields
       setNewMovie({
         title: "",
         description: "",
@@ -47,11 +65,13 @@ export default function MoviesNavbar({ fetchMovies }) {
         posterUrl: "",
         genre: "",
         rating: "",
+        price: "",
       });
-
     } catch (error) {
       console.error("Error adding movie:", error);
       alert("❌ Failed to add movie. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after operation is complete
     }
   };
 
@@ -79,9 +99,15 @@ export default function MoviesNavbar({ fetchMovies }) {
               <input type="text" name="posterUrl" placeholder="Poster URL" value={newMovie.posterUrl} onChange={handleChange} required />
               <input type="text" name="genre" placeholder="Genre (e.g., Sci-Fi, Action)" value={newMovie.genre} onChange={handleChange} required />
               <input type="number" name="rating" placeholder="Rating (e.g., 8.5)" value={newMovie.rating} onChange={handleChange} required step="0.1" min="0" max="10" />
+              <input type="number" name="price" placeholder="Price" value={newMovie.price} onChange={handleChange} min="200" max="1000" />
+
               <div className="movies-form-buttons">
-                <button type="submit">Add Movie</button>
-                <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                <button type="submit" disabled={loading}>
+                  {loading ? "Adding..." : "Add Movie"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)}>
+                  Cancel
+                </button>
               </div>
             </form>
           </div>

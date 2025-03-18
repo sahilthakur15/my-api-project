@@ -4,6 +4,8 @@ import Signup from './pages/Signup';
 import AdminDashboard from './pages/Admindash';
 import UsersList from './pages/Userslist';
 import Movies from './pages/Movieslist';
+import UserDash from './pages/Userdash';
+import MovieDetail from './pages/Moviedetail';
 
 
 
@@ -16,6 +18,8 @@ function App() {
         <Route path= "/AdminDashboard" element= {<AdminDashboard/>} />
         <Route path= "/users-list" element= {<UsersList/>} />
         <Route path= "/movies-list" element= {<Movies/>} />
+        <Route path= "/UserDashboard" element= {<UserDash/>} />
+        <Route path= "/movie-details/:_id" element= {<MovieDetail/>} />
         
 
       </Routes>
