@@ -8,6 +8,9 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     border-bottom: 2px solid #ddd;
     font-family: 'Poppins', sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 /* 🎞 Navbar Title */
@@ -18,6 +21,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.6);
+    cursor: pointer;
 }
 
 /* 🔗 Navbar Links */
@@ -33,44 +37,180 @@
     color: #e32b2b;
 }
 
-/* 👤 Profile & Logout Section */
-.userdash-navbar .user-actions {
+/* 👤 Profile Dropdown */
+.profile-dropdown {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 15px; /* Added gap between Profile & Logout */
+    gap: 10px; /* Added spacing between icon and name */
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background:linear-gradient(to right, #fdfbfb, #d3c9c9 );
+    transition: background 0.3s ease-in-out;
+}
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    transition: 0.3s ease-in-out;
 }
 
-.userdash-navbar .profile-icon {
-    font-size: 20px;
+.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+
+
+.user-name {
+    font-weight: bold;
+}
+
+
+.profile-dropdown:hover {
+    background: rgba(255, 117, 140, 0.2);
+}
+
+/* Profile Icon */
+.profile-icon {
+    font-size: 22px;
     color: #ff758c;
-    cursor: pointer;
     transition: color 0.3s ease-in-out;
 }
 
-.userdash-navbar .profile-icon:hover {
+.profile-icon:hover {
     color: #e32b2b;
 }
 
-.userdash-navbar .logout-button {
-    background: #ef8b9c !important;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    /* transition: background 0.3s ease-in-out; */
+/* Username */
+.user-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff758c;
+    text-transform: capitalize;
 }
 
-.userdash-navbar .logout-button:hover {
-    background: #e32b2b;
+/* 📌 Profile Dropdown Menu */
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    background: #1e1e1e; /* Dark background */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 8px 0;
+    top: 45px;
+    right: 0;
+    min-width: 160px;
+    display: none; /* Hides by default */
 }
+
+/* ✅ Show dropdown when active */
+.profile-dropdown.active .dropdown-menu {
+    display: block;
+}
+
+/* Dropdown Buttons */
+.dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.dropdown-menu button:hover {
+    background: #ff4b2b; /* Reddish hover effect */
+    border-radius: 5px;
+    transform: translateX(5px);
+}
+
+/* Dropdown Icons */
+.dropdown-icon {
+    font-size: 16px;
+    color: #ff758c !important; /* Gold color */
+}
+/* 📌 Ensure proper positioning */
+.profile-container {
+    position: relative;
+}
+
+/* 📌 Hide dropdown initially */
+.dropdown-menu {
+    position: absolute;
+    background: #1e1e1e; /* Dark background */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 8px 0;
+    top: 50px;
+    right: 0;
+    min-width: 160px;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Show dropdown when 'show' class is added */
+.dropdown-menu.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Dropdown Buttons */
+.dropdown-menu button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.dropdown-menu button:hover {
+    background: #ff4b2b; /* Reddish hover effect */
+    border-radius: 5px;
+}
+
+
+
 
 /* 🎠 Carousel */
 .userdash-carousel img {
     width: 100%;
     height: 430px;
     object-fit: cover;
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.userdash-carousel img:hover {
+    transform: scale(1.02);
 }
 
 /* 🔍 Filters */
@@ -83,6 +223,7 @@
     backdrop-filter: blur(10px);
     border-radius: 10px;
     margin: 20px;
+    flex-wrap: wrap;
 }
 
 .userdash-filters input,
@@ -93,6 +234,7 @@
     border: 2px solid #ff758c;
     border-radius: 5px;
     transition: border 0.3s ease-in-out;
+    font-size: 14px;
 }
 
 .userdash-filters input:focus,
@@ -128,7 +270,7 @@
     display: none;
 }
 
-/* 🎞 Movie Card (Fixed Size) */
+/* 🎞 Movie Card */
 .movie-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -136,8 +278,8 @@
     padding: 14px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    width: 250px; /* Fixed width */
-    height: 400px; /* Fixed height */
+    width: 250px;
+    height: 400px;
     text-align: center;
     position: relative;
     z-index: 2;
@@ -147,7 +289,6 @@
     justify-content: space-between;
 }
 
-/* ✨ Hover Effects */
 .movie-card:hover {
     transform: translateY(-8px);
     box-shadow: 0px 10px 20px rgba(255, 117, 140, 0.3);
@@ -160,6 +301,11 @@
     object-fit: cover;
     border-radius: 8px;
     border: 3px solid #ff758c;
+    transition: transform 0.3s ease-in-out;
+}
+
+.movie-card img:hover {
+    transform: scale(1.05);
 }
 
 /* 🎭 Movie Details */
@@ -198,11 +344,33 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease-in-out;
+    font-size: 14px;
 }
 
 .movie-card button:hover {
     background: #e32b2b;
 }
-a.profile-icon {
-    margin-right: 20px;
+
+/* 🌍 Responsive Styles */
+@media (max-width: 768px) {
+    .userdash-navbar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .userdash-filters {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .movie-grid {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .movie-card {
+        width: 100%;
+        max-width: 280px;
+    }
 }

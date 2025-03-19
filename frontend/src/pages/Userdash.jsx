@@ -4,21 +4,29 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faFilm, faUser } from "@fortawesome/free-solid-svg-icons"; // Import Profile icon
+import { faStar, faFilm, faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { jwtDecode } from "jwt-decode"; // Correct import
 import "swiper/css";
 import "swiper/css/pagination";
 import "../style/Userdash.css";
 
 const UserDash = () => {
   const [movies, setMovies] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = "";
+  const [error, setError] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [userName, setUserName] = useState("Guest");
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [ordersError, setOrdersError] = useState("");
+  const [userId, setUserId] = useState(null); // Add userId state
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchMovies();
+    fetchUserName(); // Fetch username and userId from token
   }, []);
 
   const fetchMovies = async () => {
@@ -43,32 +51,79 @@ const UserDash = () => {
     }
   };
 
-  const filteredMovies = movies.filter(movie =>
-    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const fetchUserName = () => {
+    const token = localStorage.getItem("token");
 
-  const upcomingMovies = filteredMovies.filter(movie => movie.category === "Upcoming");
-  const nowPlayingMovies = filteredMovies.filter(movie => movie.category === "Now Playing");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.username || "Guest");
+        setUserId(decodedToken._id); // Set userId
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
     navigate("/login");
   };
 
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".profile-dropdown")) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const upcomingMovies = filteredMovies.filter((movie) => movie.category === "Upcoming");
+  const nowPlayingMovies = filteredMovies.filter((movie) => movie.category === "Now Playing");
+
   return (
     <div className="userdash-container">
-      {/* Navbar */}
       <nav className="userdash-navbar">
         <h1 className="movies-navbar-title">MoviesHub</h1>
         <div className="navbar-right">
-          <a href="/profile" className="profile-icon">
-            <FontAwesomeIcon icon={faUser} />
-          </a>
-          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          <div className="profile-container">
+            <button
+              className="profile-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDropdown((prev) => !prev);
+              }}
+            >
+              <FontAwesomeIcon icon={faUser} className="profile-icon" />
+              <span className="user-name">{userName}</span>
+            </button>
+
+            <div className={`dropdown-menu ${showDropdown ? "show" : ""}`}>
+              <button onClick={() => navigate("/profile")}>
+                <FontAwesomeIcon icon={faUser} className="dropdown-icon" /> Profile
+              </button>
+              <button onClick={() => navigate("/orders")}>
+                <FontAwesomeIcon icon={faFilm} className="dropdown-icon" /> Orders
+                </button>
+              <button onClick={handleLogout}>
+                <FontAwesomeIcon icon={faRightFromBracket} className="dropdown-icon" /> Logout
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
 
-      {/* Carousel */}
       <Swiper
         className="userdash-carousel mt-3"
         spaceBetween={10}
@@ -89,7 +144,6 @@ const UserDash = () => {
         </SwiperSlide>
       </Swiper>
 
-      {/* Search & Filters */}
       <div className="userdash-filters">
         <input
           type="text"
@@ -104,64 +158,54 @@ const UserDash = () => {
         </select>
       </div>
 
-      {/* Movies Section */}
       <div className="userdash-movies">
         {loading && <p>Loading movies...</p>}
         {error && <p className="error">{error}</p>}
 
-        {/* Upcoming Movies */}
         {(selectedCategory === "All" || selectedCategory === "Upcoming") && upcomingMovies.length > 0 && (
           <div className="movie-section">
             <h2 className="section-heading">Upcoming Movies</h2>
             <div className="movie-grid">
               {upcomingMovies.map((movie) => (
-                <div 
-                  key={movie._id} 
-                  className="movie-card"
-                  onClick={() => navigate(`/movie-details/${movie._id}`)}
-                >
+                <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
                   <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
                   <h3>{movie.title}</h3>
-                  <p>
-                    <FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}
-                  </p>
-                  <p>
-                    <FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}
-                  </p>
+                  <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
+                  <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Now Playing Movies */}
         {(selectedCategory === "All" || selectedCategory === "Now Playing") && nowPlayingMovies.length > 0 && (
           <div className="movie-section">
             <h2 className="section-heading">Now Playing</h2>
             <div className="movie-grid">
               {nowPlayingMovies.map((movie) => (
-                <div 
-                  key={movie._id} 
-                  className="movie-card"
-                  onClick={() => navigate(`/movie-details/${movie._id}`)}
-                >
+                <div key={movie._id} className="movie-card" onClick={() => navigate(`/movie-details/${movie._id}`)}>
                   <img src={movie.posterUrl} alt={movie.title} className="movies-poster" />
                   <h3>{movie.title}</h3>
-                  <p>
-                    <FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}
-                  </p>
-                  <p>
-                    <FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}
-                  </p>
+                  <p><FontAwesomeIcon icon={faStar} className="icon-star" /> {movie.rating}</p>
+                  <p><FontAwesomeIcon icon={faFilm} className="icon-genre" /> {movie.genre}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {selectedCategory !== "All" && upcomingMovies.length === 0 && nowPlayingMovies.length === 0 && (
-          <p>No movies found in this category.</p>
+        {orders.length > 0 && (
+          <div className="orders-section">
+            <h2>Your Orders</h2>
+            {loadingOrders ? <p>Loading orders...</p> : orders.map((order) => (
+              <div key={order._id} className="order-card">
+                <h3>{order.movieId.title}</h3>
+                <p>Status: {order.paymentStatus}</p>
+              </div>
+            ))}
+          </div>
         )}
+        {ordersError && <p className="error">{ordersError}</p>}
       </div>
     </div>
   );

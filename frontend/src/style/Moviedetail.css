@@ -1,104 +1,360 @@
 /* Netflix-style Movie Detail Page */
 .moviedetail-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    color: white;
-    font-family: "Arial", sans-serif;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: black; /* Dark theme like Netflix */
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  color: white;
+  font-family: "Arial", sans-serif;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black; /* Dark theme like Netflix */
+}
+
+.moviedetail-go-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-go-back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.moviedetail-content {
+  display: flex;
+  max-width: 85%;
+  gap: 40px;
+  align-items: center;
+}
+
+.moviedetail-poster {
+  width: 280px;
+  height: 430px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
+
+.moviedetail-info {
+  max-width: 600px;
+}
+
+.moviedetail-title {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.moviedetail-genre,
+.moviedetail-rating,
+.moviedetail-release {
+  font-size: 18px;
+  color: #b3b3b3;
+  margin-top: 10px;
+}
+
+.moviedetail-description {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-top: 15px;
+}
+
+.moviedetail-book-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: red;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-book-btn:hover {
+  background: darkred;
+}
+
+/* Booking Modal */
+.moviedetail-booking-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Darker overlay for immersive effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.moviedetail-booking-content {
+  background: #121212; /* Netflix-style dark background */
+  padding: 25px;
+  border-radius: 10px;
+  width: 460px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+}
+
+.moviedetail-booking-content h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: white;
+}
+
+/* Movie poster inside booking form */
+.moviedetail-booking-poster {
+  width: 130px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+  margin-bottom: 15px;
+}
+
+/* Booking Details */
+.moviedetail-booking-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.moviedetail-booking-content form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.moviedetail-booking-content label {
+  font-size: 16px;
+  margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.moviedetail-booking-content select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 10px;
+  width: 100%;
+  background: #333;
+  color: white;
+}
+
+/* Ticket Selector */
+.moviedetail-ticket-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.moviedetail-ticket-btn {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.moviedetail-ticket-btn:hover {
+  background: #666;
+}
+
+.moviedetail-ticket-count {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
+
+/* Total Price */
+.moviedetail-total-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #ffcc00;
+}
+
+/* Buttons */
+.moviedetail-booking-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.moviedetail-booking-buttons button {
+  padding: 10px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  transition: 0.3s;
+  width: 48%;
+}
+
+.confirm-booking-btn {
+  background: red;
+  color: white;
+}
+
+.confirm-booking-btn:hover {
+  background: darkred;
+}
+
+.cancel-booking-btn {
+  background: #555;
+  color: white;
+}
+
+.cancel-booking-btn:hover {
+  background: #777;
+}
+
+/* Booking message */
+.moviedetail-message {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: green;
+}
+
+/* Payment Modal */
+.moviedetail-payment-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Darker overlay for immersive effect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.moviedetail-payment-content {
+  background: #121212; /* Dark theme like booking modal */
+  padding: 30px;
+  border-radius: 12px;
+  width: 450px;
+  text-align: center;
+  color: white;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.moviedetail-payment-content h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.moviedetail-payment-details {
+  font-size: 18px;
+  color: #b3b3b3;
+  margin-top: 10px;
+}
+
+/* Payment Methods */
+.moviedetail-payment-methods {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.moviedetail-payment-method {
+  background: #333; /* Dark background like booking modal */
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  width: 48%;
+  text-align: center;
+  transition: 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+}
+
+.moviedetail-payment-method:hover {
+  background: #444;
+}
+
+.moviedetail-payment-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.moviedetail-payment-buttons button {
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 48%;
+  border: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.moviedetail-confirm-payment-btn {
+  background: red;
+  color: white;
+}
+
+.moviedetail-confirm-payment-btn:hover {
+  background: darkred;
+}
+
+.moviedetail-cancel-payment-btn {
+  background: #555;
+  color: white;
+}
+
+.moviedetail-cancel-payment-btn:hover {
+  background: #777;
+}
+.moviedetail-payment-options{
+  background: red !important;
+  color: white !important;
+}
+button, select {
+  text-transform: none;
+  color: white;
+  background: red;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .moviedetail-payment-content {
+    width: 90%;
   }
-  
-  .moviedetail-go-back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-  }
-  
-  .moviedetail-go-back-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
-  
-  .moviedetail-content {
-    display: flex;
-    max-width: 85%;
-    gap: 40px;
-    align-items: center;
-  }
-  
-  .moviedetail-poster {
-    width: 280px; /* Set a fixed width */
-    height: 430px; /* Maintain aspect ratio */
-    object-fit: cover; /* Prevent stretching */
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-  }
-  
-  .moviedetail-info {
-    max-width: 600px;
-  }
-  
-  .moviedetail-title {
-    font-size: 50px;
-    font-weight: bold;
-  }
-  
-  .moviedetail-genre,
-  .moviedetail-rating,
-  .moviedetail-release {
-    font-size: 18px;
-    color: #b3b3b3;
-    margin-top: 10px;
-  }
-  
-  .moviedetail-description {
-    font-size: 18px;
-    line-height: 1.5;
-    margin-top: 15px;
-  }
-  
-  .moviedetail-book-btn {
-    margin-top: 20px;
-    padding: 12px 24px;
-    background: red;
-    border: none;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-  }
-  
-  .moviedetail-book-btn:hover {
-    background: darkred;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .moviedetail-content {
-      flex-direction: column;
-      text-align: center;
-    }
-  
-    .moviedetail-poster {
-      width: 90%;
-      height: auto;
-    }
-  
-    .moviedetail-title {
-      font-size: 35px;
-    }
-  }
-  
+}

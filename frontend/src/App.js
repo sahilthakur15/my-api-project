@@ -6,6 +6,7 @@ import UsersList from './pages/Userslist';
 import Movies from './pages/Movieslist';
 import UserDash from './pages/Userdash';
 import MovieDetail from './pages/Moviedetail';
+import OrderPage from './pages/Orderpage';
 
 
 
@@ -20,6 +21,8 @@ function App() {
         <Route path= "/movies-list" element= {<Movies/>} />
         <Route path= "/UserDashboard" element= {<UserDash/>} />
         <Route path= "/movie-details/:_id" element= {<MovieDetail/>} />
+        <Route path= "/orders" element= {<OrderPage/>} />
+        
         
 
       </Routes>
