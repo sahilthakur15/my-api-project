@@ -15,6 +15,11 @@ const MovieDetail = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [message, setMessage] = useState("");
   const [orderId, setOrderId] = useState(null);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvc, setCvc] = useState("");
+
 console.log(orderId,"rim")
   useEffect(() => {
     fetchMovieDetail();
@@ -40,8 +45,9 @@ console.log(orderId,"rim")
     }
   };
 
-  const increaseTickets = () => setNumTickets((prev) => prev + 1);
+  const increaseTickets = () => setNumTickets((prev) => (prev < 15 ? prev + 1 : prev));
   const decreaseTickets = () => setNumTickets((prev) => (prev > 1 ? prev - 1 : 1));
+
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -128,11 +134,18 @@ console.log(orderId,"rim")
           <p><strong>Release Date:</strong> {movie.releaseDate}</p>
           <p><strong>Description:</strong> {movie.description}</p>
 
+          
+
           {movie.category === "Now Playing" && (
             <button className="moviedetail-book-btn" onClick={() => setShowForm(true)}>
               Book Now
             </button>
           )}
+          {movie.category === "Upcoming" && (
+            <button className="moviedetail-coming-soon-btn" disabled>
+              Coming Soon
+              </button>
+            )}
 
           {message && <p className="moviedetail-message">{message}</p>}
         </div>
@@ -164,26 +177,86 @@ console.log(orderId,"rim")
         </div>
       )}
 
-      {/* Payment Modal */}
-      {showPaymentModal && (
-        <div className="moviedetail-payment-modal">
-          <div className="moviedetail-payment-content">
-            <h2>Complete Your Payment</h2>
-            <p className="moviedetail-payment-details">
-              <strong>Amount:</strong> ₹{totalPrice}
-            </p>
-            <p className="moviedetail-payment-details">
-              <strong>Order ID:</strong> {orderId}
-            </p>
+{showPaymentModal && (
+  <div className="payment-modal-overlay">
+    <div className="payment-modal">
+      <h2>Complete Your Payment</h2>
+      <p><strong>Amount:</strong> ₹{totalPrice}</p>
 
-            <div className="moviedetail-payment-options">
-              <button onClick={handlePayment}>Pay Now</button>
-              <button onClick={() => setShowPaymentModal(false)}>Cancel</button>
-            </div>
+      <div className="payment-card">
+        <p className="payment-amount">PAYING: ₹{totalPrice}</p>
+        <div className="card-fields">
+          
+          {/* Card Number Input */}
+          <input
+            type="text"
+            placeholder="Card Number"
+            maxLength="16"
+            value={cardNumber}
+            onChange={(e) => setCardNumber(e.target.value)}
+          />
+          {cardNumber && !/^\d{16}$/.test(cardNumber) && (
+            <p className="error-message">❌ only numbers & must be 16 digits.</p>
+          )}
+
+          {/* Card Holder Name Input */}
+          <input
+            type="text"
+            placeholder="Card Holder"
+            value={cardHolder}
+            onChange={(e) => setCardHolder(e.target.value)}
+          />
+          {cardHolder && !/^[A-Za-z\s]{3,}$/.test(cardHolder) && (
+            <p className="error-message">❌ Enter a valid name (only letters, min. 3 characters).</p>
+          )}
+
+          <div className="small-fields">
+            {/* Expiry Date Input */}
+            <input
+              type="text"
+              placeholder="MM/YY"
+              maxLength="5"
+              value={expiryDate}
+              onChange={(e) => setExpiryDate(e.target.value)}
+            />
+            {expiryDate && !/^\d{2}\/\d{2}$/.test(expiryDate) && (
+              <p className="error-message">❌ Format: MM/YY</p>
+            )}
+
+            {/* CVC Input */}
+            <input
+              type="text"
+              placeholder="CVC"
+              maxLength="3"
+              value={cvc}
+              onChange={(e) => setCvc(e.target.value)}
+            />
+            {cvc && !/^\d{3}$/.test(cvc) && (
+              <p className="error-message">❌ CVC must be exactly 3 digits.</p>
+            )}
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Payment Button */}
+      <button
+        className="complete-order-btn"
+        onClick={handlePayment}
+        disabled={
+          !/^\d{16}$/.test(cardNumber) ||
+          !/^[A-Za-z\s]{3,}$/.test(cardHolder) ||
+          !/^\d{2}\/\d{2}$/.test(expiryDate) ||
+          !/^\d{3}$/.test(cvc)
+        }
+      >
+        Complete Order
+      </button>
+      <button className="cancel-order-btn" onClick={() => setShowPaymentModal(false)}>Cancel</button>
     </div>
+  </div>
+)}
+</div>
+
   );
 };
 

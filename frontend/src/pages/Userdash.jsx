@@ -95,7 +95,14 @@ const UserDash = () => {
   return (
     <div className="userdash-container">
       <nav className="userdash-navbar">
-        <h1 className="movies-navbar-title">MoviesHub</h1>
+      <h1 className="movies-navbar-title">
+  <img 
+    src="https://media.licdn.com/dms/image/v2/D4D3DAQExvhSHO7vvhQ/image-scale_191_1128/image-scale_191_1128/0/1706972400034/book_karo_cover?e=2147483647&v=beta&t=-UDjCOjg-Qd1EcfVG5q0BZYCWGK_etLmtaywvf-mQ6c" 
+    alt="Book-Karo Logo" 
+    className="movies-navbar-logo"
+  />
+</h1>
+
         <div className="navbar-right">
           <div className="profile-container">
             <button
@@ -134,13 +141,16 @@ const UserDash = () => {
         modules={[Autoplay, Pagination]}
       >
         <SwiperSlide>
-          <img src="https://surgeonsofhorror.com/wp-content/uploads/2024/09/the-substance-2024.jpg?w=960&h=260&crop=1" alt="Movie 1" />
+          <img src="https://static1.squarespace.com/static/56a1633ac21b86f80ddeacb4/t/66bf5d4014d6d3745b72d72e/1723817280771/the+substance+banner.jpg?format=1500w" alt="Movie 1" />
         </SwiperSlide>
         <SwiperSlide>
           <img src="https://streamcoimg-a.akamaihd.net/000/390/615/390615-Banner-L2-5910462c50979976730b358bb59c3ec1.jpg" alt="Movie 2" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="https://assetscdn1.paytm.com/images/cinema/the-woman-in-the-yard-ba50c440-dfd8-11ef-b69e-bb358f2786c8.jpg" alt="Movie 3" />
+          <img src="https://i.ytimg.com/vi/1s-Ko4J3mWs/maxresdefault.jpg" alt="Movie 3" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="https://www.heavenofhorror.com/wp-content/uploads/2025/02/Counterattack-Counterstrike-Netflix-Review.jpg" alt="Movie 4" />
         </SwiperSlide>
       </Swiper>
 

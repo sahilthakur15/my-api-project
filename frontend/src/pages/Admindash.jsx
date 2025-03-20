@@ -1,40 +1,35 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaUser, FaFilm, FaDollarSign } from "react-icons/fa"; // Import Icons
-import Navbar from "../components/Navbar"; // Import Navbar
+import { FaUser, FaFilm, FaRupeeSign } from "react-icons/fa"; // Import FaRupeeSign instead of FaDollarSign
+
+import Navbar from "../components/Navbar";
 import "../style/AdminDash.css";
+
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
-  const [movieCount, setMovieCount] = useState(0); // State for movie count
+  const [movieCount, setMovieCount] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0); // State for total revenue
 
   useEffect(() => {
     fetchUserCount();
     fetchMovieCount();
+    fetchTotalRevenue();
   }, []);
 
   // Function to fetch total users count
   const fetchUserCount = async () => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("🚨 No token found in localStorage! User may not be authenticated.");
-      return;
-    }
+    if (!token) return console.error("🚨 No token found!");
 
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allusers", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (Array.isArray(response.data.data)) {
-        setUserCount(response.data.data.length);
-      } else {
-        console.error("⚠️ Unexpected user count response:", response.data);
-        setUserCount(0);
-      }
+      setUserCount(Array.isArray(response.data.data) ? response.data.data.length : 0);
     } catch (error) {
       console.error("❌ Error fetching user count:", error.response?.data || error.message);
       setUserCount(0);
@@ -44,32 +39,50 @@ export default function AdminDashboard() {
   // Function to fetch total movies count
   const fetchMovieCount = async () => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      console.error("🚨 No token found in localStorage! User may not be authenticated.");
-      return;
-    }
+    if (!token) return console.error("🚨 No token found!");
 
     try {
       const response = await axios.get("http://localhost:8001/api/admin/allmovies", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (Array.isArray(response.data)) {
-        setMovieCount(response.data.length);
-      } else {
-        console.error("⚠️ Unexpected movie count response:", response.data);
-        setMovieCount(0);
-      }
+      setMovieCount(Array.isArray(response.data) ? response.data.length : 0);
     } catch (error) {
       console.error("❌ Error fetching movie count:", error.response?.data || error.message);
       setMovieCount(0);
     }
   };
 
+  // Function to fetch total revenue from all completed orders
+  const fetchTotalRevenue = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return console.error("🚨 No token found!");
+
+    try {
+      const response = await axios.get("http://localhost:8001/api/admin/getAllOrders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (Array.isArray(response.data.data)) {
+        // Filter only completed orders
+        const completedOrders = response.data.data.filter(order => order.paymentStatus === "Completed");
+
+        // Calculate total revenue
+        const revenue = completedOrders.reduce((sum, order) => sum + order.totalPrice, 0);
+        setTotalRevenue(revenue);
+      } else {
+        console.error("⚠️ Unexpected orders response:", response.data);
+        setTotalRevenue(0);
+      }
+    } catch (error) {
+      console.error("❌ Error fetching revenue:", error.response?.data || error.message);
+      setTotalRevenue(0);
+    }
+  };
+
   return (
     <>
-      <Navbar /> {/* Navbar at the top */}
+      <Navbar />
       <div className="dashboard-container">
         <div className="dashboard-cards">
           
@@ -96,14 +109,16 @@ export default function AdminDashboard() {
           </div>
 
           {/* Total Revenue Card */}
-          <div className="stat-card">
-            <div className="icon-container">
-              <FaDollarSign size={40} color="#FFC107" />
-            </div>
-            <div className="stat-details">
-              <h3>Total Revenue</h3>
-            </div>
-          </div>
+<div className="stat-card">
+  <div className="icon-container">
+    <FaRupeeSign size={40} color="#FFC107" /> {/* Use FaRupeeSign here */}
+  </div>
+  <div className="stat-details">
+    <h3>Total Revenue</h3>
+    <p>{totalRevenue.toLocaleString()}</p> {/* Format currency */}
+  </div>
+</div>
+
 
         </div>
       </div>

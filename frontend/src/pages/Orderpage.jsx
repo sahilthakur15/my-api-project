@@ -84,7 +84,7 @@ const OrderPage = () => {
                 <p>
                   <FontAwesomeIcon icon={faClock} className="icon" /> Time: {new Date(order.createdAt).toLocaleTimeString()}
                 </p>
-                <p>Total Price: ${order.totalPrice}</p>
+                <p>Total Price: ₹{order.totalPrice}</p>
                 <p>No. of Tickets: {order.ticketCount}</p> {/* Display ticket count */}
                 <p>Status: {order.paymentStatus}</p>
               </div>

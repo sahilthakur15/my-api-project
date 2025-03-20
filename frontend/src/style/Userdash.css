@@ -14,7 +14,7 @@
 }
 
 /* 🎞 Navbar Title */
-.movies-navbar-title {
+/* .movies-navbar-title {
     font-size: 30px;
     font-weight: bold;
     color: #ff758c;
@@ -22,8 +22,13 @@
     letter-spacing: 1px;
     text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.6);
     cursor: pointer;
-}
-
+} */
+.movies-navbar-logo {
+    width: 168px;
+    height: 40px;
+    margin-right: 10px; /* Space between logo and text */
+    border-radius: 5px; /* Optional: Rounded corners */
+  }
 /* 🔗 Navbar Links */
 .userdash-navbar a {
     color: #ff758c;
@@ -203,7 +208,7 @@
 /* 🎠 Carousel */
 .userdash-carousel img {
     width: 100%;
-    height: 430px;
+    height: 580px;
     object-fit: cover;
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
@@ -241,7 +246,29 @@
 .userdash-filters select:focus {
     border-color: #e32b2b;
 }
+/* 🎠 Movie Scrollable Section */
+.movie-scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #ff758c transparent;
+}
 
+/* Hide scrollbar for WebKit browsers */
+.movie-scroll-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.movie-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #ff758c;
+    border-radius: 10px;
+}
+
+.movie-scroll-container::-webkit-scrollbar-track {
+    background-color: transparent;
+}
 /* 🎬 Movie Sections */
 .movie-section {
     padding: 20px;
@@ -256,21 +283,27 @@
     text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.4);
 }
 
-/* 🌀 Movie Grid */
+/* 🎠 Scrollable Movie Section */
 .movie-grid {
     display: flex;
     gap: 20px;
     overflow-x: auto;
-    padding: 20px 0;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
+    white-space: nowrap;
+    padding: 10px 0;
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
 }
 
 .movie-grid::-webkit-scrollbar {
-    display: none;
+    display: none; /* Hide scrollbar in Chrome, Safari */
 }
 
-/* 🎞 Movie Card */
+
+.movie-grid::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+/* 🎬 Movie Card */
 .movie-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -281,17 +314,8 @@
     width: 250px;
     height: 400px;
     text-align: center;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.movie-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0px 10px 20px rgba(255, 117, 140, 0.3);
+    cursor: pointer;
+    flex: 0 0 auto; /* Prevents shrinking */
 }
 
 /* 🎥 Movie Poster */
@@ -315,6 +339,14 @@
     color: #ff758c;
     text-shadow: 0px 3px 6px rgba(255, 117, 140, 0.4);
 }
+
+/* 🌍 Responsive Styles */
+@media (max-width: 768px) {
+    .movie-grid {
+        padding: 10px;
+    }
+}
+
 
 .movie-card .movie-info {
     display: flex;

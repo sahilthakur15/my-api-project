@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import "../style/Userslist.css";
 import { FaUserShield, FaUser, FaTrash } from "react-icons/fa"; // Added FaUser icon
 
 export default function UsersList() {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchUsers();
@@ -63,6 +65,13 @@ export default function UsersList() {
 
   return (
     <div className="container mt-5">
+      {/* Go Back to Dashboard Button */}
+      <div className="mb-3">
+        <button className="btn btn-primary" onClick={() => navigate("/AdminDashboard")}>
+          ← Go Back to Dashboard
+        </button>
+      </div>
+
       <h1 className="users-title text-center mb-4">Users List</h1>
 
       <div className="users-grid">

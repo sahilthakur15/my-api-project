@@ -84,6 +84,18 @@
 .moviedetail-book-btn:hover {
   background: darkred;
 }
+.moviedetail-coming-soon-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: red;
+  border: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
 
 /* Booking Modal */
 .moviedetail-booking-modal {
@@ -243,109 +255,75 @@
   color: green;
 }
 
-/* Payment Modal */
-.moviedetail-payment-modal {
+.payment-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8); /* Darker overlay for immersive effect */
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1100;
 }
 
-.moviedetail-payment-content {
-  background: #121212; /* Dark theme like booking modal */
-  padding: 30px;
-  border-radius: 12px;
-  width: 450px;
+.payment-modal {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
   text-align: center;
-  color: white;
-  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+  width: 350px;
+}
+
+.payment-card {
+  background: #ffcc66;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left;
+  margin: 10px 0;
+}
+
+.payment-amount {
+  font-weight: bold;
+}
+
+.card-fields input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+.small-fields {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 10px;
 }
 
-.moviedetail-payment-content h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
+.small-fields input {
+  width: 48%;
+}
+
+.complete-order-btn {
+  width: 100%;
+  background: #333;
   color: white;
-}
-
-.moviedetail-payment-details {
-  font-size: 18px;
-  color: #b3b3b3;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   margin-top: 10px;
 }
 
-/* Payment Methods */
-.moviedetail-payment-methods {
-  display: flex;
-  justify-content: space-between;
+.cancel-order-btn {
   width: 100%;
-  margin-top: 20px;
-}
-
-.moviedetail-payment-method {
-  background: #333; /* Dark background like booking modal */
-  padding: 15px;
-  border-radius: 8px;
+  background: #d9534f;
   color: white;
-  cursor: pointer;
-  width: 48%;
-  text-align: center;
-  transition: 0.3s;
-  font-size: 16px;
-  font-weight: bold;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
-}
-
-.moviedetail-payment-method:hover {
-  background: #444;
-}
-
-.moviedetail-payment-buttons {
-  margin-top: 25px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.moviedetail-payment-buttons button {
-  padding: 12px;
-  font-size: 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  width: 48%;
+  padding: 10px;
   border: none;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.moviedetail-confirm-payment-btn {
-  background: red;
-  color: white;
-}
-
-.moviedetail-confirm-payment-btn:hover {
-  background: darkred;
-}
-
-.moviedetail-cancel-payment-btn {
-  background: #555;
-  color: white;
-}
-
-.moviedetail-cancel-payment-btn:hover {
-  background: #777;
-}
-.moviedetail-payment-options{
-  background: red !important;
-  color: white !important;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
 }
 button, select {
   text-transform: none;

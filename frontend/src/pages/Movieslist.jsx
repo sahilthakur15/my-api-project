@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import "../style/Movies.css";
 import MoviesNavbar from "../components/Moviesbar";
@@ -10,6 +11,7 @@ const Movies = () => {
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(null);
   const menuRefs = useRef({});
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     fetchMovies();
@@ -71,7 +73,6 @@ const Movies = () => {
   return (
     <>
       <MoviesNavbar fetchMovies={fetchMovies} />
-
       <div className="movies-container">
         {/* Now Playing Section */}
         <h2 className="movies-now-playing-title">Now Playing</h2>

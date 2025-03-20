@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ const Login = () => {
             const role = response.data?.data?.user?.role;
 
             if (token) {
-                localStorage.setItem("token", token); // ✅ Fixed key to match authMiddleware
+                localStorage.setItem("token", token);
                 console.log("Token stored:", token);
 
                 if (role) {
@@ -74,6 +74,11 @@ const Login = () => {
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Login</button>
                 </form>
+                
+                {/* Registration Link */}
+                <p className="text-center mt-3">
+                    Don't have an account? <Link to="/">Register here</Link>
+                </p>
             </div>
         </div>
     );

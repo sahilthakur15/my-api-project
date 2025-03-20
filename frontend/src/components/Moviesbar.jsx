@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../style/Moviesbar.css";
 
 export default function MoviesNavbar({ fetchMovies }) {
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [newMovie, setNewMovie] = useState({
     title: "",
@@ -15,7 +17,7 @@ export default function MoviesNavbar({ fetchMovies }) {
     price: "",
   });
 
-  const [loading, setLoading] = useState(false); // For loading state
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setNewMovie({ ...newMovie, [e.target.name]: e.target.value });
@@ -24,7 +26,6 @@ export default function MoviesNavbar({ fetchMovies }) {
   const handleAddMovie = async (event) => {
     event.preventDefault();
 
-    // Client-side validation for price and rating
     if (newMovie.price && (isNaN(newMovie.price) || newMovie.price < 200 || newMovie.price > 1000)) {
       alert("❌ Price must be a valid number between 200 and 1000.");
       return;
@@ -38,25 +39,24 @@ export default function MoviesNavbar({ fetchMovies }) {
     const token = localStorage.getItem("token");
 
     try {
-      setLoading(true); // Set loading to true while adding the movie
+      setLoading(true);
 
       const response = await axios.post(
         "http://localhost:8001/api/admin/addmovies",
         newMovie,
-        { 
+        {
           headers: { Authorization: `Bearer ${token}` },
-         }
+        }
       );
 
       console.log("Movie added:", response.data);
 
-      fetchMovies(); // Refresh movies list
+      fetchMovies();
 
-      setShowForm(false); // Close form
+      setShowForm(false);
 
       alert("✅ Movie successfully added! 🎉");
 
-      // Reset form fields
       setNewMovie({
         title: "",
         description: "",
@@ -71,7 +71,7 @@ export default function MoviesNavbar({ fetchMovies }) {
       console.error("Error adding movie:", error);
       alert("❌ Failed to add movie. Please try again.");
     } finally {
-      setLoading(false); // Set loading to false after operation is complete
+      setLoading(false);
     }
   };
 
@@ -79,9 +79,14 @@ export default function MoviesNavbar({ fetchMovies }) {
     <>
       <nav className="movies-navbar">
         <h2 className="movies-navbar-title">Movies List</h2>
-        <button className="movies-add-btn" onClick={() => setShowForm(true)}>
-          + Add Movie
-        </button>
+        <div className="movies-navbar-buttons">
+          <button className="go-back-btn" onClick={() => navigate("/AdminDashboard")}>
+            ← Go Back to Dashboard
+          </button>
+          <button className="movies-add-btn" onClick={() => setShowForm(true)}>
+            + Add Movie
+          </button>
+        </div>
       </nav>
 
       {showForm && (
