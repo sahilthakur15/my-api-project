@@ -9,7 +9,7 @@ const generateToken = async (user) => {
 
     // Generate a token
     const token = jwt.sign(
-        { id: user._id, role: user.role, username: user.username },
+        { id: user._id, role: user.role, username: user.username, email: user.email },
         process.env.JWT_SECRET,
         { expiresIn: "6h" }
     );

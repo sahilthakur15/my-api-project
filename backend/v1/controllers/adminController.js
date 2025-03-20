@@ -3,7 +3,7 @@ const APIResponse = require("../utilites/apiResponse");
 const Messages = require("../utilites/message");
 const User = require("../models/userModel");
 const Movie = require("../models/movieModel");
-
+const Order = require("../models/orderModel");
  
 
 // Get all users
@@ -175,6 +175,30 @@ const deleteMovies = async (req, res) => {
 };
 
 
+// Get all users orders
+const getAllCompletedOrders = async (req, res) => {
+    try {
+      const completedOrders = await Order.find({ paymentStatus: "Completed" })
+        .populate("userId", "username email")
+        .populate("movieId", "title posterUrl")
+        .exec();
+  
+      if (completedOrders.length === 0) {
+        return APIResponse.error(res, { status: 404, message: "No completed orders found" });
+      }
+  
+      return APIResponse.success(res, {
+        status: 200,
+        success: true,
+        data: completedOrders,
+      });
+    } catch (error) {
+      console.error("❌ Error fetching all completed orders:", error);
+      return APIResponse.error(res, { status: 500, message: "Server error", error: error.message });
+    }
+  };
+  
+
 
 
 module.exports = {
@@ -184,5 +208,6 @@ module.exports = {
     deleteUser,
     addMovie, 
     getAllMovies,
-    deleteMovies
+    deleteMovies,
+    getAllCompletedOrders
 }
