@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
 import "../style/Auth.css"
+import { signupUser } from '../utils/axiosInstance';
 
 function Signup() {
   const [username, setName] = useState('');
@@ -20,17 +21,20 @@ function Signup() {
     };
 
     try {
-      const response = await axios.post('http://localhost:8001/api/auth/register', userData);
-      console.log(response.data);
-      alert("Signup successful")
-      // Reset form fields after successful submission
-      setName('');
-      setEmail('');
-      setPassword('');
-      navigate('/login'); // Redirect to login page after successful signup
+      const response = await signupUser(userData);
+      console.log(response);
+      alert("User registered successfully");
+
+      //reset fields
+      setName("");
+      setEmail("");
+      setPassword("");
+
+      navigate("/login");
       
     } catch (err) {
-      console.log(err);
+      console.log("Signup failed:",err);
+      
     }
   };
 

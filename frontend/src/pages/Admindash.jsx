@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { FaUser, FaFilm, FaRupeeSign } from "react-icons/fa"; // Import FaRupeeSign instead of FaDollarSign
-
 import Navbar from "../components/Navbar";
 import "../style/AdminDash.css";
+import { getMoviesCount, getTotalRevenue, getUserCount } from "../utils/axiosInstance";
 
 
 export default function AdminDashboard() {
@@ -19,65 +18,47 @@ export default function AdminDashboard() {
     fetchTotalRevenue();
   }, []);
 
-  // Function to fetch total users count
-  const fetchUserCount = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return console.error("🚨 No token found!");
+  
+ // Function to fetch total users count
+ const fetchUserCount = async () => {
+  // const token = localStorage.getItem("token");
+  // if (!token) return console.error("🚨 No token found!");
 
-    try {
-      const response = await axios.get("http://localhost:8001/api/admin/allusers", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  try {
+    const count = await getUserCount();
+    setUserCount(count);
 
-      setUserCount(Array.isArray(response.data.data) ? response.data.data.length : 0);
-    } catch (error) {
-      console.error("❌ Error fetching user count:", error.response?.data || error.message);
-      setUserCount(0);
-    }
-  };
+  } catch(error) {
+      console.error("❌ Error fetching user count:", error);
+  setUserCount(0);
+  }
+};
 
-  // Function to fetch total movies count
-  const fetchMovieCount = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return console.error("🚨 No token found!");
+// Function to fetch total movies count
+const fetchMovieCount = async () => {
+  // const token = localStorage.getItem("token");
+  // if (!token) return console.error("🚨 No token found!");
 
-    try {
-      const response = await axios.get("http://localhost:8001/api/admin/allmovies", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setMovieCount(Array.isArray(response.data) ? response.data.length : 0);
-    } catch (error) {
-      console.error("❌ Error fetching movie count:", error.response?.data || error.message);
-      setMovieCount(0);
-    }
-  };
+  try {
+    const count = await getMoviesCount();
+    setMovieCount(count);
+} catch (error) {
+    console.error("❌ Error fetching movie count:", error);
+    setMovieCount(0);
+}
+};
 
   // Function to fetch total revenue from all completed orders
   const fetchTotalRevenue = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return console.error("🚨 No token found!");
-
+    // const token = localStorage.getItem("token");
+    // if (!token) return console.error("🚨 No token found!");
     try {
-      const response = await axios.get("http://localhost:8001/api/admin/getAllOrders", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (Array.isArray(response.data.data)) {
-        // Filter only completed orders
-        const completedOrders = response.data.data.filter(order => order.paymentStatus === "Completed");
-
-        // Calculate total revenue
-        const revenue = completedOrders.reduce((sum, order) => sum + order.totalPrice, 0);
-        setTotalRevenue(revenue);
-      } else {
-        console.error("⚠️ Unexpected orders response:", response.data);
-        setTotalRevenue(0);
-      }
-    } catch (error) {
-      console.error("❌ Error fetching revenue:", error.response?.data || error.message);
+      const revenue = await getTotalRevenue();
+      setTotalRevenue(revenue);
+  } catch (error) {
+      console.error("❌ Error fetching revenue:", error);
       setTotalRevenue(0);
-    }
+  }
   };
 
   return (

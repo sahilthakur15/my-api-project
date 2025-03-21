@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../style/Moviedetail.css";
+import { bookMovie, getMovieDetail, userPayment } from "../utils/axiosInstance";
 
 const MovieDetail = () => {
   const { _id } = useParams();
@@ -32,12 +33,10 @@ console.log(orderId,"rim")
   }, [numTickets, movie]);
 
   const fetchMovieDetail = async () => {
+    setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:8001/api/user/movie/${_id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setMovie(response.data?.data);
+      const movieData = await getMovieDetail(_id);
+      setMovie(movieData);
     } catch (error) {
       setError("Failed to load movie details. Please try again.");
     } finally {
@@ -54,57 +53,29 @@ console.log(orderId,"rim")
     setMessage("");
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://localhost:8001/api/user/bookmovie",
-        {
-          movieId: movie._id,
-          numTickets,
-          totalPrice,
-          paymentStatus: "Pending",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        const orderID = await bookMovie(movie._id, numTickets, totalPrice);
+        
+        if (orderID) {
+            setOrderId(orderID);
+            alert(`🎉 Booking Successful! Order ID: ${orderID}`);
+            setShowForm(false);
+            setShowPaymentModal(true); // Open payment modal after booking
         }
-      );
-
-      const orderID = response.data.order._id;
-      setOrderId(orderID);
-      alert(`🎉 Booking Successful! Order ID: ${orderID}`);
-      setShowForm(false);
-      setShowPaymentModal(true); // Open payment modal after booking
     } catch (error) {
-      setMessage("❌ Booking failed. Please try again.");
+        setMessage("❌ Booking failed. Please try again.");
     }
-  };
+};
 
   const handlePayment = async () => {
     try {
-      const token = localStorage.getItem("token");
+      
   
       if (!orderId) {
         alert("Order ID not found! Please book a ticket first.");
         return;
       }
-  
-      const response = await axios.put(
-        "http://localhost:8001/api/user/updateStatus",
-        {
-          orderId,
-          paymentStatus: "Completed", // Change from "Successful" to "Completed"
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-  
-      if (response.data.success) {
+      const isSuccess = await userPayment(orderId);
+      if (isSuccess) {
         alert(`🎉 Payment Successful! Order ID: ${orderId}`);
         setShowPaymentModal(false);
       } else {

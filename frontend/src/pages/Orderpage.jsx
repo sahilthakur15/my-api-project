@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt, faClock } from "@fortawesome/free-solid-svg-icons";
 import "../style/OrderPage.css"; // Ensure this file includes the appropriate styles
 import { jwtDecode } from "jwt-decode";  // Correct named import
+import { getuserOrders } from "../utils/axiosInstance";
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
@@ -39,20 +40,8 @@ const OrderPage = () => {
   // Function to fetch orders based on userId
   const fetchOrders = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const decodedToken = jwtDecode(token);  
-      const userId = decodedToken.id;
-  
-      const response = await axios.get(
-        `http://localhost:8001/api/user/getbookedmovies?userId=${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
-  
-      setOrders(response.data.data);
+      const ordersData = await getuserOrders();
+      setOrders(ordersData);
     } catch (error) {
       setError("Failed to fetch orders");
     } finally {

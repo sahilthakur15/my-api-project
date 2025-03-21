@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +8,7 @@ import { jwtDecode } from "jwt-decode"; // Correct import
 import "swiper/css";
 import "swiper/css/pagination";
 import "../style/Userdash.css";
+import { userMovies } from "../utils/axiosInstance";
 
 const UserDash = () => {
   const [movies, setMovies] = useState([]);
@@ -30,20 +30,10 @@ const UserDash = () => {
   }, []);
 
   const fetchMovies = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setError("Authorization token is missing. Please log in.");
-      setLoading(false);
-      return;
-    }
-
+    setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8001/api/user/allmovies", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setMovies(response.data.data);
+      const movies = await userMovies();
+      setMovies(movies);
     } catch (error) {
       setError("Failed to load movies. Please try again later.");
     } finally {

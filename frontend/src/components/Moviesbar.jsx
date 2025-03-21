@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../style/Moviesbar.css";
+import { addMovie } from "../utils/axiosInstance";
 
 export default function MoviesNavbar({ fetchMovies }) {
   const navigate = useNavigate();
@@ -26,54 +26,56 @@ export default function MoviesNavbar({ fetchMovies }) {
   const handleAddMovie = async (event) => {
     event.preventDefault();
 
+    // Validate price range (200-1000)
     if (newMovie.price && (isNaN(newMovie.price) || newMovie.price < 200 || newMovie.price > 1000)) {
-      alert("❌ Price must be a valid number between 200 and 1000.");
-      return;
+        alert("❌ Price must be a valid number between 200 and 1000.");
+        return;
     }
 
+    // Validate rating range (0-10)
     if (newMovie.rating && (isNaN(newMovie.rating) || newMovie.rating < 0 || newMovie.rating > 10)) {
-      alert("❌ Rating must be a valid number between 0 and 10.");
-      return;
+        alert("❌ Rating must be a valid number between 0 and 10.");
+        return;
     }
-
-    const token = localStorage.getItem("token");
 
     try {
-      setLoading(true);
+        setLoading(true);
 
-      const response = await axios.post(
-        "http://localhost:8001/api/admin/addmovies",
-        newMovie,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+        // Get the logged-in user's role from localStorage
+        const userRole = localStorage.getItem("userRole");
+
+        if (userRole !== "superadmin") {
+            alert("❌ You are not authorized to add movies!");
+            return;
         }
-      );
 
-      console.log("Movie added:", response.data);
+        const response = await addMovie(newMovie);
 
-      fetchMovies();
-
-      setShowForm(false);
-
-      alert("✅ Movie successfully added! 🎉");
-
-      setNewMovie({
-        title: "",
-        description: "",
-        category: "Now Playing",
-        releaseDate: "",
-        posterUrl: "",
-        genre: "",
-        rating: "",
-        price: "",
-      });
+        if (response?.error) {
+            alert(response.error); // Show alert for unauthorized action
+        } else {
+            alert("✅ Movie successfully added! 🎉");
+            fetchMovies(); // Refresh the movie list
+            setShowForm(false);
+            setNewMovie({
+                title: "",
+                description: "",
+                category: "Now Playing",
+                releaseDate: "",
+                posterUrl: "",
+                genre: "",
+                rating: "",
+                price: "",
+            });
+        }
     } catch (error) {
-      console.error("Error adding movie:", error);
-      alert("❌ Failed to add movie. Please try again.");
+        console.error("❌ Error adding movie:", error);
+        alert("❌ Failed to add movie. Please try again.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   return (
     <>

@@ -1,6 +1,7 @@
-import axios from 'axios';
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { loginUser } from '../utils/axiosInstance';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,33 +10,36 @@ const Login = () => {
 
     const dataSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
-            const response = await axios.post('http://localhost:8001/api/auth/login', { email, password });
-
-            console.log("Login Response:", response.data);
-
+            const response = await loginUser({ email, password });
+            console.log("Login response:", response);
+    
             // Extract token and role safely
-            const token = response.data?.data?.token;
-            const role = response.data?.data?.user?.role;
-
+            const token = response?.data?.token;
+            const role = response?.data?.user?.role;
+    
             if (token) {
                 localStorage.setItem("token", token);
                 console.log("Token stored:", token);
-
+    
                 if (role) {
                     localStorage.setItem("userRole", role);
                     console.log("User role stored:", role);
                 }
-
+    
                 alert("Login Successful!");
-
+    
                 // Clear form fields
-                setEmail('');
-                setPassword('');
-
+                setEmail("");
+                setPassword("");
+    
                 // Redirect based on role
-                navigate(role === "superadmin" ? '/AdminDashboard' : '/UserDashboard');
+                if (role === "superadmin" || role === "admin") {
+                    navigate("/AdminDashboard"); // Admin and Super Admin go to Admin Dashboard
+                } else {
+                    navigate("/UserDashboard"); // Regular users go to User Dashboard
+                }
             } else {
                 alert("Invalid login response. Please try again.");
             }
@@ -44,6 +48,7 @@ const Login = () => {
             alert(err.response?.data?.message || "Login failed. Please check your credentials.");
         }
     };
+    
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
