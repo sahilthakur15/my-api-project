@@ -60,14 +60,16 @@ axiosInstance.interceptors.response.use(
 
 
 
-// signup user function
+// signup user function 
 export const signupUser = async (userData) => {
-    try{
+    try {
         const response = await axiosInstance.post("/auth/register", userData);
-        return response.data;
-    }
-    catch(error){
-        return error.response.data;
+        return response.data; // Successful response
+    } catch (error) {
+        console.error("❌ Signup Error:", error.response?.data || error.message);
+        return {
+            error: error.response?.data?.message || "Signup failed. Please try again."
+        };
     }
 };
 
