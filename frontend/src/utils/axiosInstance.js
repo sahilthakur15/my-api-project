@@ -60,7 +60,7 @@ axiosInstance.interceptors.response.use(
 
 
 
-// signup user function
+// signup user function made it fix
 export const signupUser = async (userData) => {
     try {
         const response = await axiosInstance.post("/auth/register", userData);
